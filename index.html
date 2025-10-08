@@ -59,6 +59,35 @@
             opacity: 0.8;
         }
 
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 3px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -362,7 +391,74 @@
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .hamburger {
+                display: flex;
+            }
+
+            nav ul {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0,0,0,0.2);
+                padding: 2rem 0;
+                gap: 0;
+            }
+
+            nav ul.active {
+                left: 0;
+            }
+
+            nav ul li {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            nav ul li:last-child {
+                border-bottom: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .about h2, .skills h2, .projects h2, .contact h2 {
+                font-size: 2rem;
+            }
+
+            .about p {
+                font-size: 1rem;
+            }
+
+            .project-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
+            nav {
+                padding: 0 1rem;
+            }
+
+            .hero {
+                padding: 100px 1rem 60px;
+            }
+
             .hero h1 {
                 font-size: 2rem;
             }
@@ -371,12 +467,31 @@
                 font-size: 1rem;
             }
 
-            nav ul {
-                gap: 1rem;
+            .about, .projects {
+                padding: 60px 1rem;
+            }
+
+            .skills, .contact {
+                padding: 60px 1rem;
+            }
+
+            .about h2, .skills h2, .projects h2, .contact h2 {
+                font-size: 1.8rem;
+                margin-bottom: 2rem;
             }
 
             .skills-grid {
                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 1rem;
+            }
+
+            .skill-item {
+                padding: 1.5rem 1rem;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
             .profile-photo {
@@ -394,6 +509,108 @@
                 bottom: 15px;
                 right: 15px;
             }
+
+            .social-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .social-links a {
+                font-size: 1.1rem;
+            }
+
+            .btn {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 90px 1rem 50px;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 0.9rem;
+            }
+
+            .about, .projects {
+                padding: 50px 1rem;
+            }
+
+            .skills, .contact {
+                padding: 50px 1rem;
+            }
+
+            .about h2, .skills h2, .projects h2, .contact h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .about p, .contact p {
+                font-size: 0.95rem;
+            }
+
+            .profile-photo {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-photo-container {
+                padding: 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .skill-item h3 {
+                font-size: 1rem;
+            }
+
+            .skill-item p {
+                font-size: 0.9rem;
+            }
+
+            .project-content h3 {
+                font-size: 1.2rem;
+            }
+
+            .project-content p {
+                font-size: 0.9rem;
+            }
+
+            .project-tags {
+                gap: 0.3rem;
+            }
+
+            .tag {
+                font-size: 0.8rem;
+                padding: 4px 12px;
+            }
+
+            .project-btn {
+                padding: 6px 15px;
+                font-size: 0.85rem;
+            }
+
+            .btn {
+                padding: 8px 20px;
+                font-size: 0.85rem;
+            }
+
+            footer {
+                padding: 1.5rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -402,7 +619,12 @@
     <header>
         <nav>
             <div class="logo">MyPortfolio</div>
-            <ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul id="navMenu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#skills">Skills</a></li>
@@ -536,7 +758,7 @@
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
-        <p>ingin tahu lebih lanjut? Hubungi saya!</p>
+        <p>ingin lebih tahu tentang saya? Hubungi saya!</p>
         <div class="social-links">
             <a href="https://github.com/lenopo123" target="_blank">🐙 GitHub</a>
             <a href="https://www.instagram.com/sipiitttt1?igsh=MTVma2o3NHJqZXFwdg%3D%3D&utm_source=qr" target="_blank">💼 instagram</a>
@@ -550,6 +772,23 @@
     </footer>
 
     <script>
+        // Hamburger Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('#navMenu a').forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
         // Smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
