@@ -59,6 +59,21 @@
             opacity: 0.8;
         }
 
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -363,16 +378,50 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            nav ul {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s;
+                box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+                padding: 2rem 0;
+                gap: 0;
+            }
+
+            nav ul li {
+                padding: 1rem 0;
+            }
+
+            nav ul.active {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .menu-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(8px, 8px);
+            }
+
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -7px);
+            }
+
             .hero h1 {
                 font-size: 2rem;
             }
 
             .hero p {
                 font-size: 1rem;
-            }
-
-            nav ul {
-                gap: 1rem;
             }
 
             .skills-grid {
@@ -402,7 +451,12 @@
     <header>
         <nav>
             <div class="logo">MyPortfolio</div>
-            <ul>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul id="navMenu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#skills">Skills</a></li>
@@ -412,6 +466,7 @@
         </nav>
     </header>
 
+    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="profile-photo-container">
             <img src="WhatsApp Image 2025-10-06 at 12.58.30_2c5969a5.jpg" alt="Sultan Abdullah" class="profile-photo" id="profilePhoto">
@@ -422,7 +477,7 @@
         <a href="#projects" class="btn">View My Work</a>
     </section>
 
-   
+    <!-- About Section -->
     <section id="about" class="about">
         <h2>About Me</h2>
         <p>
@@ -536,12 +591,11 @@
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
-        <h2>Get In Touch</h2>
+        <h2>Contact Me</h2>
         <p>Tertarik untuk berkolaborasi? Hubungi saya!</p>
         <div class="social-links">
-            <a href="sultanabdul289@gmail.com">📧 Email</a>
-            <a href="https://github.com/yourusername" target="_blank">🐙 GitHub</a>
-            <a href="https://linkedin.com/in/yourusername" target="_blank">💼 LinkedIn</a>
+            <a href="https://github.com/lenopo123" target="_blank">🐙 GitHub</a>
+            <a href="https://www.instagram.com/sipiitttt1?igsh=MTVma2o3NHJqZXFwdg%3D%3D&utm_source=qr" target="_blank">💼 LinkedIn</a>
             <a href="https://wa.me/qr/5HEV2QJ4ILDIF1" target="_blank">💬 WhatsApp</a>
         </div>
     </section>
@@ -552,6 +606,23 @@
     </footer>
 
     <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        menuToggle.addEventListener('click', function() {
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('#navMenu a').forEach(link => {
+            link.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
         // Smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -605,6 +676,4 @@
         });
     </script>
 </body>
-
 </html>
-
