@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laptop Management System</title>
+    <title>3D Solar System Explorer</title>
     <style>
         * {
             margin: 0;
@@ -13,490 +13,471 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f6fa;
+            background: radial-gradient(ellipse at center, #0a0e27 0%, #000000 100%);
+            overflow: hidden;
+            cursor: grab;
         }
 
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        body:active {
+            cursor: grabbing;
         }
 
-        .navbar h1 {
-            font-size: 1.5rem;
-        }
-
-        .navbar .user {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .header h2 {
-            color: #333;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s;
-        }
-
-        .btn:hover {
-            background: #764ba2;
-        }
-
-        .btn-danger {
-            background: #e74c3c;
-        }
-
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-
-        .btn-edit {
-            background: #f39c12;
-        }
-
-        .btn-edit:hover {
-            background: #e67e22;
-        }
-
-        .search-box {
-            margin-bottom: 1.5rem;
-        }
-
-        .search-box input {
-            width: 100%;
-            max-width: 400px;
-            padding: 10px 15px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            background: #f8f9fa;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        tr:hover {
-            background: #f8f9fa;
-        }
-
-        .actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .actions button {
-            padding: 5px 15px;
-            font-size: 0.9rem;
-        }
-
-        .modal {
-            display: none;
+        .stars {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            pointer-events: none;
         }
 
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
+        .star {
+            position: absolute;
             background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
         }
 
-        .modal-content h3 {
-            margin-bottom: 1.5rem;
-            color: #667eea;
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
 
-        .form-group {
-            margin-bottom: 1rem;
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            perspective: 2000px;
+            overflow: hidden;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #333;
-            font-weight: 500;
+        .solar-system {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateX(75deg);
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
         }
 
-        .form-group input, .form-group select {
+        .sun {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #ff8c00, #ff4500);
+            border-radius: 50%;
+            box-shadow: 0 0 60px #ff8c00, 0 0 120px #ff4500, inset 0 0 30px #ff6347;
+            animation: sunPulse 4s ease-in-out infinite;
+            z-index: 10;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes sunPulse {
+            0%, 100% { 
+                box-shadow: 0 0 60px #ff8c00, 0 0 120px #ff4500, inset 0 0 30px #ff6347;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 80px #ff8c00, 0 0 150px #ff4500, inset 0 0 40px #ff6347;
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+        }
+
+        .orbit {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform-style: preserve-3d;
+        }
+
+        .planet-container {
+            position: absolute;
             width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: orbit linear infinite;
         }
 
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
+        @keyframes orbit {
+            from { transform: rotateZ(0deg); }
+            to { transform: rotateZ(360deg); }
         }
 
-        .modal-actions {
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.5);
+        }
+
+        .planet:hover {
+            transform: translateX(-50%) scale(1.3);
+            filter: brightness(1.3);
+            z-index: 100;
+        }
+
+        .planet-label {
+            position: absolute;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+            top: 120%;
+            left: 50%;
+            transform: translateX(-50%) rotateX(-75deg);
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .planet:hover .planet-label {
+            opacity: 1;
+        }
+
+        .info-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            max-width: 300px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .info-panel h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info-panel p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #a0aec0;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 15px;
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .modal-actions button {
-            flex: 1;
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
 
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: center;
+        .btn:active {
+            transform: translateY(0);
         }
 
-        .stat-card h3 {
-            font-size: 2rem;
-            color: #667eea;
-            margin-bottom: 0.5rem;
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 13px;
         }
 
-        .stat-card p {
-            color: #666;
+        .slider {
+            width: 100px;
+            height: 5px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+        }
 
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-            }
+        .planet-info {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            max-width: 280px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
 
-            .actions {
-                flex-direction: column;
-            }
+        .planet-info.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .planet-info h2 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .planet-info .detail {
+            margin: 10px 0;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .planet-info .detail span:first-child {
+            color: #a0aec0;
+        }
+
+        .planet-info .detail span:last-child {
+            color: white;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <h1>💻 Laptop Management System</h1>
-        <div class="user">
-            <span>Admin</span>
-            <button class="btn" onclick="alert('Logout berhasil!')">Logout</button>
-        </div>
-    </nav>
+    <div class="stars" id="stars"></div>
+    
+    <div class="info-panel">
+        <h1>🌌 Solar System 3D</h1>
+        <p>Jelajahi tata surya kita! Klik planet untuk info lebih detail. Drag untuk memutar view.</p>
+    </div>
 
-    <div class="container">
-        <div class="stats">
-            <div class="stat-card">
-                <h3 id="totalLaptops">0</h3>
-                <p>Total Laptop</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="availableLaptops">0</h3>
-                <p>Tersedia</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="usedLaptops">0</h3>
-                <p>Digunakan</p>
-            </div>
-        </div>
-
-        <div class="header">
-            <h2>Daftar Laptop</h2>
-            <button class="btn" onclick="openAddModal()">+ Tambah Laptop</button>
-        </div>
-
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Cari laptop berdasarkan merk, model, atau processor..." onkeyup="searchLaptop()">
-        </div>
-
-        <div class="table-container">
-            <table id="laptopTable">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Merk</th>
-                        <th>Model</th>
-                        <th>Processor</th>
-                        <th>RAM</th>
-                        <th>Storage</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="laptopBody">
-                </tbody>
-            </table>
+    <div class="container" id="container">
+        <div class="solar-system" id="solarSystem">
+            <div class="sun"></div>
+            <div id="orbits"></div>
         </div>
     </div>
 
-    <!-- Modal Add/Edit -->
-    <div id="laptopModal" class="modal">
-        <div class="modal-content">
-            <h3 id="modalTitle">Tambah Laptop</h3>
-            <form id="laptopForm" onsubmit="saveLaptop(event)">
-                <input type="hidden" id="laptopId">
-                
-                <div class="form-group">
-                    <label>Merk</label>
-                    <input type="text" id="merk" required>
-                </div>
+    <div class="controls">
+        <button class="btn" id="pauseBtn">⏸️ Pause</button>
+        <button class="btn" id="resetBtn">🔄 Reset</button>
+        <div class="speed-control">
+            <span>Speed:</span>
+            <input type="range" min="0.1" max="3" step="0.1" value="1" class="slider" id="speedSlider">
+            <span id="speedValue">1x</span>
+        </div>
+    </div>
 
-                <div class="form-group">
-                    <label>Model</label>
-                    <input type="text" id="model" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Processor</label>
-                    <input type="text" id="processor" required>
-                </div>
-
-                <div class="form-group">
-                    <label>RAM</label>
-                    <input type="text" id="ram" placeholder="Contoh: 8GB" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Storage</label>
-                    <input type="text" id="storage" placeholder="Contoh: 512GB SSD" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Status</label>
-                    <select id="status" required>
-                        <option value="Tersedia">Tersedia</option>
-                        <option value="Digunakan">Digunakan</option>
-                        <option value="Maintenance">Maintenance</option>
-                    </select>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="submit" class="btn">Simpan</button>
-                    <button type="button" class="btn btn-danger" onclick="closeModal()">Batal</button>
-                </div>
-            </form>
+    <div class="planet-info" id="planetInfo">
+        <h2 id="planetName"></h2>
+        <div class="detail">
+            <span>Diameter:</span>
+            <span id="planetDiameter"></span>
+        </div>
+        <div class="detail">
+            <span>Jarak dari Matahari:</span>
+            <span id="planetDistance"></span>
+        </div>
+        <div class="detail">
+            <span>Periode Orbit:</span>
+            <span id="planetOrbit"></span>
+        </div>
+        <div class="detail">
+            <span>Temperatur:</span>
+            <span id="planetTemp"></span>
         </div>
     </div>
 
     <script>
-        let laptops = [
-            { id: 1, merk: 'Asus', model: 'ROG Strix G15', processor: 'Intel Core i7-11800H', ram: '16GB', storage: '512GB SSD', status: 'Tersedia' },
-            { id: 2, merk: 'Lenovo', model: 'ThinkPad X1 Carbon', processor: 'Intel Core i5-1135G7', ram: '8GB', storage: '256GB SSD', status: 'Digunakan' },
-            { id: 3, merk: 'HP', model: 'Pavilion 14', processor: 'AMD Ryzen 5 5500U', ram: '8GB', storage: '512GB SSD', status: 'Tersedia' },
-            { id: 4, merk: 'Dell', model: 'XPS 13', processor: 'Intel Core i7-1165G7', ram: '16GB', storage: '1TB SSD', status: 'Maintenance' },
-            { id: 5, merk: 'Acer', model: 'Swift 3', processor: 'Intel Core i5-1135G7', ram: '8GB', storage: '512GB SSD', status: 'Tersedia' }
+        const planets = [
+            { name: 'Merkurius', size: 15, distance: 180, speed: 4.7, color: '#8c7853', diameter: '4,879 km', distanceKm: '57.9 juta km', orbitPeriod: '88 hari', temp: '430°C' },
+            { name: 'Venus', size: 22, distance: 250, speed: 3.5, color: '#ffc649', diameter: '12,104 km', distanceKm: '108.2 juta km', orbitPeriod: '225 hari', temp: '462°C' },
+            { name: 'Bumi', size: 24, distance: 320, speed: 3, color: '#4a90e2', diameter: '12,742 km', distanceKm: '149.6 juta km', orbitPeriod: '365 hari', temp: '15°C' },
+            { name: 'Mars', size: 18, distance: 390, speed: 2.4, color: '#e27b58', diameter: '6,779 km', distanceKm: '227.9 juta km', orbitPeriod: '687 hari', temp: '-63°C' },
+            { name: 'Jupiter', size: 50, distance: 520, speed: 1.3, color: '#c88b3a', diameter: '139,820 km', distanceKm: '778.5 juta km', orbitPeriod: '12 tahun', temp: '-108°C' },
+            { name: 'Saturnus', size: 45, distance: 650, speed: 0.9, color: '#fad5a5', diameter: '116,460 km', distanceKm: '1.43 miliar km', orbitPeriod: '29 tahun', temp: '-138°C' },
+            { name: 'Uranus', size: 35, distance: 750, speed: 0.7, color: '#4fd0e7', diameter: '50,724 km', distanceKm: '2.87 miliar km', orbitPeriod: '84 tahun', temp: '-195°C' },
+            { name: 'Neptunus', size: 34, distance: 850, speed: 0.5, color: '#4b70dd', diameter: '49,244 km', distanceKm: '4.50 miliar km', orbitPeriod: '165 tahun', temp: '-200°C' }
         ];
-        let nextId = 6;
 
-        function renderTable() {
-            const tbody = document.getElementById('laptopBody');
-            tbody.innerHTML = '';
+        const orbitsContainer = document.getElementById('orbits');
+        const solarSystem = document.getElementById('solarSystem');
+        const container = document.getElementById('container');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+        const planetInfo = document.getElementById('planetInfo');
 
-            laptops.forEach((laptop, index) => {
-                const row = `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${laptop.merk}</td>
-                        <td>${laptop.model}</td>
-                        <td>${laptop.processor}</td>
-                        <td>${laptop.ram}</td>
-                        <td>${laptop.storage}</td>
-                        <td><span style="padding: 5px 10px; border-radius: 5px; background: ${laptop.status === 'Tersedia' ? '#2ecc71' : laptop.status === 'Digunakan' ? '#e74c3c' : '#f39c12'}; color: white; font-size: 0.9rem;">${laptop.status}</span></td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-edit" onclick="editLaptop(${laptop.id})">Edit</button>
-                                <button class="btn btn-danger" onclick="deleteLaptop(${laptop.id})">Hapus</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
+        let isPaused = false;
+        let currentSpeed = 1;
+        let rotationX = 75;
+        let rotationZ = 0;
+        let isDragging = false;
+        let startX, startY;
+
+        // Create stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 3 + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Create planets
+        planets.forEach((planet, index) => {
+            const orbit = document.createElement('div');
+            orbit.className = 'orbit';
+            orbit.style.width = planet.distance * 2 + 'px';
+            orbit.style.height = planet.distance * 2 + 'px';
+            orbit.style.marginLeft = -planet.distance + 'px';
+            orbit.style.marginTop = -planet.distance + 'px';
+
+            const planetContainer = document.createElement('div');
+            planetContainer.className = 'planet-container';
+            planetContainer.style.animationDuration = planet.speed * currentSpeed + 's';
+
+            const planetEl = document.createElement('div');
+            planetEl.className = 'planet';
+            planetEl.style.width = planet.size + 'px';
+            planetEl.style.height = planet.size + 'px';
+            planetEl.style.background = `radial-gradient(circle at 30% 30%, ${planet.color}, ${adjustColor(planet.color, -30)})`;
+            planetEl.style.boxShadow = `0 0 ${planet.size}px ${planet.color}`;
+
+            const label = document.createElement('div');
+            label.className = 'planet-label';
+            label.textContent = planet.name;
+            planetEl.appendChild(label);
+
+            planetEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showPlanetInfo(planet);
             });
 
-            updateStats();
+            planetContainer.appendChild(planetEl);
+            orbit.appendChild(planetContainer);
+            orbitsContainer.appendChild(orbit);
+        });
+
+        // Helper function to adjust color brightness
+        function adjustColor(color, amount) {
+            const clamp = (num) => Math.min(255, Math.max(0, num));
+            const num = parseInt(color.replace('#', ''), 16);
+            const r = clamp((num >> 16) + amount);
+            const g = clamp(((num >> 8) & 0x00FF) + amount);
+            const b = clamp((num & 0x0000FF) + amount);
+            return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
         }
 
-        function updateStats() {
-            document.getElementById('totalLaptops').textContent = laptops.length;
-            document.getElementById('availableLaptops').textContent = laptops.filter(l => l.status === 'Tersedia').length;
-            document.getElementById('usedLaptops').textContent = laptops.filter(l => l.status === 'Digunakan').length;
+        function showPlanetInfo(planet) {
+            document.getElementById('planetName').textContent = planet.name;
+            document.getElementById('planetDiameter').textContent = planet.diameter;
+            document.getElementById('planetDistance').textContent = planet.distanceKm;
+            document.getElementById('planetOrbit').textContent = planet.orbitPeriod;
+            document.getElementById('planetTemp').textContent = planet.temp;
+            planetInfo.classList.add('active');
         }
 
-        function openAddModal() {
-            document.getElementById('modalTitle').textContent = 'Tambah Laptop';
-            document.getElementById('laptopForm').reset();
-            document.getElementById('laptopId').value = '';
-            document.getElementById('laptopModal').classList.add('active');
-        }
-
-        function editLaptop(id) {
-            const laptop = laptops.find(l => l.id === id);
-            if (laptop) {
-                document.getElementById('modalTitle').textContent = 'Edit Laptop';
-                document.getElementById('laptopId').value = laptop.id;
-                document.getElementById('merk').value = laptop.merk;
-                document.getElementById('model').value = laptop.model;
-                document.getElementById('processor').value = laptop.processor;
-                document.getElementById('ram').value = laptop.ram;
-                document.getElementById('storage').value = laptop.storage;
-                document.getElementById('status').value = laptop.status;
-                document.getElementById('laptopModal').classList.add('active');
-            }
-        }
-
-        function saveLaptop(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById('laptopId').value;
-            const laptop = {
-                merk: document.getElementById('merk').value,
-                model: document.getElementById('model').value,
-                processor: document.getElementById('processor').value,
-                ram: document.getElementById('ram').value,
-                storage: document.getElementById('storage').value,
-                status: document.getElementById('status').value
-            };
-
-            if (id) {
-                const index = laptops.findIndex(l => l.id == id);
-                laptops[index] = { ...laptop, id: parseInt(id) };
-                alert('Laptop berhasil diupdate!');
-            } else {
-                laptops.push({ ...laptop, id: nextId++ });
-                alert('Laptop berhasil ditambahkan!');
-            }
-
-            closeModal();
-            renderTable();
-        }
-
-        function deleteLaptop(id) {
-            if (confirm('Yakin ingin menghapus laptop ini?')) {
-                laptops = laptops.filter(l => l.id !== id);
-                renderTable();
-                alert('Laptop berhasil dihapus!');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('laptopModal').classList.remove('active');
-        }
-
-        function searchLaptop() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = laptops.filter(l => 
-                l.merk.toLowerCase().includes(search) ||
-                l.model.toLowerCase().includes(search) ||
-                l.processor.toLowerCase().includes(search)
-            );
-
-            const tbody = document.getElementById('laptopBody');
-            tbody.innerHTML = '';
-
-            filtered.forEach((laptop, index) => {
-                const row = `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${laptop.merk}</td>
-                        <td>${laptop.model}</td>
-                        <td>${laptop.processor}</td>
-                        <td>${laptop.ram}</td>
-                        <td>${laptop.storage}</td>
-                        <td><span style="padding: 5px 10px; border-radius: 5px; background: ${laptop.status === 'Tersedia' ? '#2ecc71' : laptop.status === 'Digunakan' ? '#e74c3c' : '#f39c12'}; color: white; font-size: 0.9rem;">${laptop.status}</span></td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-edit" onclick="editLaptop(${laptop.id})">Edit</button>
-                                <button class="btn btn-danger" onclick="deleteLaptop(${laptop.id})">Hapus</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        // Click outside modal to close
-        document.getElementById('laptopModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.planet') && !e.target.closest('.planet-info')) {
+                planetInfo.classList.remove('active');
             }
         });
 
-        // Initial render
-        renderTable();
+        // Pause/Resume
+        pauseBtn.addEventListener('click', () => {
+            isPaused = !isPaused;
+            const containers = document.querySelectorAll('.planet-container');
+            containers.forEach(c => {
+                c.style.animationPlayState = isPaused ? 'paused' : 'running';
+            });
+            pauseBtn.textContent = isPaused ? '▶️ Resume' : '⏸️ Pause';
+        });
+
+        // Reset
+        resetBtn.addEventListener('click', () => {
+            rotationX = 75;
+            rotationZ = 0;
+            updateRotation();
+        });
+
+        // Speed control
+        speedSlider.addEventListener('input', (e) => {
+            currentSpeed = parseFloat(e.target.value);
+            speedValue.textContent = currentSpeed + 'x';
+            const containers = document.querySelectorAll('.planet-container');
+            containers.forEach((c, i) => {
+                c.style.animationDuration = planets[i].speed * currentSpeed + 's';
+            });
+        });
+
+        // Drag to rotate
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            rotationZ += dx * 0.5;
+            rotationX = Math.max(0, Math.min(90, rotationX - dy * 0.5));
+            updateRotation();
+            startX = e.clientX;
+            startY = e.clientY;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        function updateRotation() {
+            solarSystem.style.transform = `translate(-50%, -50%) rotateX(${rotationX}deg) rotateZ(${rotationZ}deg)`;
+        }
     </script>
 </body>
 </html>
